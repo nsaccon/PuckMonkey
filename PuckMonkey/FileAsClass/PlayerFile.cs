@@ -2,14 +2,16 @@
 using NHLStats;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace PuckMonkey
 {
     class PlayerFile
     {
-        private const string PATH = @"C:\Users\Nathan Saccon\source\repos\PuckMonkey\PuckMonkey\Players.json";
+        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\Players.json");
 
         public List<PlayerEnhanced> PlayersEnhanced;
 
@@ -60,11 +62,11 @@ namespace PuckMonkey
         public void SaveToFile()
         {
             string output = JsonConvert.SerializeObject(PlayersEnhanced);
-            System.IO.File.WriteAllText(PATH, output);
+            File.WriteAllText(PATH, output);
         }
         private void ReadFromFile()
         {
-            string input = System.IO.File.ReadAllText(PATH);
+            string input = File.ReadAllText(PATH);
             PlayersEnhanced = JsonConvert.DeserializeObject<List<PlayerEnhanced>>(input);
         }
 

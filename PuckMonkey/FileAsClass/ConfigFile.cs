@@ -1,13 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace PuckMonkey
 {
     class ConfigFile
     {
-        private const string PATH = @"C:\Users\Nathan Saccon\source\repos\PuckMonkey\PuckMonkey\Config.json";
+        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\Config.json");
 
         public HashSet<string> ScheduleDaysLoaded;
 
