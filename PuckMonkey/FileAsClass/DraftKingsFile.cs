@@ -33,9 +33,12 @@ namespace PuckMonkey
         {
             DraftGroup group = GetGroupId();
             string fileName = $"DraftKingsSalaries_{group.StartDateEst.ToString("yyyy-MM-dd")}_{group.DraftGroupId}.csv";
-            string url = BASE_URL + CONTEST_CSV + $"?draftGroupId={group.DraftGroupId}";
-            WebClient client = new WebClient();
-            client.DownloadFile(url, SAVE_PATH + fileName);
+            if (!File.Exists(SAVE_PATH + fileName))
+            {
+                string url = BASE_URL + CONTEST_CSV + $"?draftGroupId={group.DraftGroupId}";
+                WebClient client = new WebClient();
+                client.DownloadFile(url, SAVE_PATH + fileName);
+            }
         }
 
         private class DraftGroup
