@@ -11,7 +11,7 @@ namespace PuckMonkey
 {
     class PlayerFile
     {
-        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\Players.json");
+        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\..\..\Files\Players.json");
 
         public List<PlayerEnhanced> PlayersEnhanced;
 
@@ -63,11 +63,13 @@ namespace PuckMonkey
         {
             string output = JsonConvert.SerializeObject(PlayersEnhanced);
             File.WriteAllText(PATH, output);
+            Console.WriteLine("Player File saved.");
         }
         private void ReadFromFile()
         {
             string input = File.ReadAllText(PATH);
             PlayersEnhanced = JsonConvert.DeserializeObject<List<PlayerEnhanced>>(input);
+            Console.WriteLine("Player file read.");
         }
 
         private void UpdatePlayerData(DateTime date)

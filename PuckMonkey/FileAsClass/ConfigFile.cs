@@ -9,7 +9,7 @@ namespace PuckMonkey
 {
     class ConfigFile
     {
-        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\Config.json");
+        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\..\..\Files\Config.json");
 
         public HashSet<string> ScheduleDaysLoaded;
 
@@ -28,15 +28,17 @@ namespace PuckMonkey
         public void SaveToFile()
         {
             string output = JsonConvert.SerializeObject(this);
-            System.IO.File.WriteAllText(PATH, output);
+            File.WriteAllText(PATH, output);
+            Console.WriteLine("Config file saved.");
         }
         private void ReadFromFile()
         {
-            string input = System.IO.File.ReadAllText(PATH);
+            string input = File.ReadAllText(PATH);
             ConfigFile file = JsonConvert.DeserializeObject<ConfigFile>(input);
             if (file != null)
             {
                 ScheduleDaysLoaded = file.ScheduleDaysLoaded;
+                Console.WriteLine("Config file read.");
             }
         }
     }
