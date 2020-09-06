@@ -9,7 +9,7 @@ namespace PuckMonkey
 {
     class ConfigFile
     {
-        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\Config.json");
+        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\..\..\Files\Config.json");
 
         public HashSet<string> ScheduleDaysLoaded;
 

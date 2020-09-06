@@ -11,7 +11,7 @@ namespace PuckMonkey
 {
     class PlayerFile
     {
-        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\Players.json");
+        private string PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\..\..\Files\Players.json");
 
         public List<PlayerEnhanced> PlayersEnhanced;
 
