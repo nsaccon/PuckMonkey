@@ -16,6 +16,27 @@ namespace PuckMonkey
         private const string BASE_URL = @"https://www.draftkings.com";
         private const string GETCONTESTS_PATH = @"/lobby/getcontests?sport=NHL";
         private const string CONTEST_CSV = @"/bulklineup/getdraftablecsv";
+
+        public List<DraftKingsPlayer> DraftKingsPlayers;
+
+        public DraftKingsFile(string date)
+        {
+            DraftKingsPlayers = new List<DraftKingsPlayer>();
+            ReadFileIntoClass(date);
+        }
+
+        public void DownloadCSV() 
+        {
+            DraftGroup group = GetGroupId();
+            string filePath = SAVE_PATH + $"DraftKingsSalaries_{group.StartDateEst.ToString("yyyy-MM-dd")}_{group.DraftGroupId}.csv";
+            if (!File.Exists(filePath))
+            {
+                string url = BASE_URL + CONTEST_CSV + $"?draftGroupId={group.DraftGroupId}";
+                WebClient client = new WebClient();
+                client.DownloadFile(url, SAVE_PATH + filePath);
+            }
+        }
+
         private DraftGroup GetGroupId() 
         {
             string resStr;
@@ -29,16 +50,27 @@ namespace PuckMonkey
             CsvIdsResponse csvIdsResponse = JsonConvert.DeserializeObject<CsvIdsResponse>(resStr);
             return csvIdsResponse.GetDraftGroupId();
         }
-        public void DownloadCSV() 
+
+        private void ReadFileIntoClass(string date) // yyyy-MM-dd
         {
-            DraftGroup group = GetGroupId();
-            string fileName = $"DraftKingsSalaries_{group.StartDateEst.ToString("yyyy-MM-dd")}_{group.DraftGroupId}.csv";
-            if (!File.Exists(SAVE_PATH + fileName))
+            foreach (var fileName in Directory.GetFiles(SAVE_PATH))
             {
-                string url = BASE_URL + CONTEST_CSV + $"?draftGroupId={group.DraftGroupId}";
-                WebClient client = new WebClient();
-                client.DownloadFile(url, SAVE_PATH + fileName);
+                if (fileName.Contains(date))
+                {
+                    string[] file= File.ReadAllLines(fileName);
+                    for (int i = 8; i < file.Length; i++)
+                    {
+                        string line = file[i];
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            DraftKingsPlayers.Add(new DraftKingsPlayer(line));
+                        }
+                    }
+                    Console.WriteLine("DraftKings file read");
+                    return;
+                }
             }
+            Console.Error.WriteLine("Error Reading DrafKings File.");
         }
 
         private class DraftGroup
@@ -67,6 +99,25 @@ namespace PuckMonkey
                     }
                 }
                 return DraftGroups[currentIndex];
+            }
+        }
+
+        public class DraftKingsPlayer
+        {
+            public string Position { get; set; }
+            public string Name { get; set; }
+            public string Id { get; set; }
+            public int Salary { get; set; }
+            public DraftKingsPlayer(string lineFromFile)
+            {
+                string[] splitLines = lineFromFile.Split(',');
+                Position = splitLines[10];
+                Name = splitLines[12];
+                Id = splitLines[13];
+                if(int.TryParse(splitLines[15], out int salary))
+                {
+                    Salary = salary;
+                }
             }
         }
     }

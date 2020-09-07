@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using static PuckMonkey.DraftKingsFile;
 
 namespace PuckMonkey
 {
@@ -124,6 +125,30 @@ namespace PuckMonkey
                 PlayerFile playerFile = new PlayerFile();
                 playerFile.UpdatePlayerData(currentDate);
                 currentDate = currentDate.AddDays(1);
+            }
+        }
+
+        public void AddDraftKingsSalaries(string date)
+        {
+            DraftKingsFile draftKingsFile = new DraftKingsFile(date);
+            List<DraftKingsPlayer> draftKingsPlayers = draftKingsFile.DraftKingsPlayers;
+            for (int i = 0; i < draftKingsPlayers.Count(); i++)
+            {
+                bool playerFound = false;
+                for (int j = 0; j < PlayersEnhanced.Count(); j++)
+                {
+                    if(draftKingsPlayers[i].Name == $"{PlayersEnhanced[j].Player.firstName} {PlayersEnhanced[j].Player.lastName}")
+                    {
+                        Console.WriteLine($"Found player: {draftKingsPlayers[i].Name}");
+                        PlayersEnhanced[j].Salary.DraftKings = draftKingsPlayers[i].Salary;
+                        playerFound = true;
+                        break;
+                    }
+                }
+                if (!playerFound)
+                {
+                    Console.WriteLine($"Player name NOT found: {draftKingsPlayers[i].Name}");
+                }
             }
         }
     }

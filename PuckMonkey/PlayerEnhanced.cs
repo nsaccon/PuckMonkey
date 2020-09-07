@@ -17,10 +17,19 @@ namespace PuckMonkey
 
         public HashSet<string> GamesPlayedIn;
 
+        public SalaryData Salary;
+
         public PlayerEnhanced()
         {
             GameStats = new List<PlayerGameStats>();
             GamesPlayedIn = new HashSet<string>();
+            Salary = new SalaryData();
+        }
+
+        public class SalaryData
+        {
+            public int DraftKings;
+            public int Fanduel;
         }
     }
 }
